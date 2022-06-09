@@ -23,6 +23,15 @@ class RedSocial{
 
   private:
     /* completar */
+    struct Usuario {
+      int _id;
+      std::string _alias;
+      std::set<string> _lista_amigos; 
+    };
+    std::map<int, Usuario> _usuarios;
+    std::set<int> _conjunto_ids;
+    int _cantidad_amistades;
+    std::map<int, Usuario>::iterator _usuario_mas_popular;
 };
 
 #endif
