@@ -3,6 +3,7 @@
 
 #include <string>
 #include <set>
+#include <map>
 
 class RedSocial{
   public:
@@ -26,12 +27,13 @@ class RedSocial{
     struct Usuario {
       int _id;
       std::string _alias;
-      std::set<string> _lista_amigos; 
+      std::set<std::string> _conjunto_amigos; 
     };
     std::map<int, Usuario> _usuarios;
     std::set<int> _conjunto_ids;
     int _cantidad_amistades;
     std::map<int, Usuario>::iterator _usuario_mas_popular;
+    //std::set<string> _amigos_del_mas_popular;
 };
 
 #endif

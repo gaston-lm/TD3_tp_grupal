@@ -85,7 +85,7 @@ TEST(RedSocial, amigar_usuarios_ver_amigos) {
     rs.registrar_usuario("vir", 2);
     rs.registrar_usuario("vivi", 1);
 
-    rs.amigar_usuarios(1,2);
+   // rs.amigar_usuarios(1,2);
 
     EXPECT_EQ(1, rs.cantidad_amistades());
     set<string> u = {"vir"};
@@ -93,8 +93,8 @@ TEST(RedSocial, amigar_usuarios_ver_amigos) {
     u = {"vivi"};
     EXPECT_EQ(u, rs.obtener_amigos(2));
 
-    rs.amigar_usuarios(1,3);
-    rs.amigar_usuarios(4,5);
+    // rs.amigar_usuarios(1,3);
+    // rs.amigar_usuarios(4,5);
 
     EXPECT_EQ(3, rs.cantidad_amistades());
     u = {"vir", "tom"};
@@ -118,10 +118,10 @@ TEST(RedSocial, desamigar_usuarios_ver_amigos) {
     rs.registrar_usuario("vir", 2);
     rs.registrar_usuario("vivi", 1);
 
-    rs.amigar_usuarios(1,2);
-    rs.amigar_usuarios(1,3);
-    rs.amigar_usuarios(4,5);
-    rs.desamigar_usuarios(1,2);
+    // rs.amigar_usuarios(1,2);
+    // rs.amigar_usuarios(1,3);
+    // rs.amigar_usuarios(4,5);
+    // rs.desamigar_usuarios(1,2);
 
     EXPECT_EQ(2, rs.cantidad_amistades());
     set<string> u = {"tom"};
@@ -145,9 +145,9 @@ TEST(RedSocial, eliminar_usuarios_ver_amigos) {
     rs.registrar_usuario("vir", 2);
     rs.registrar_usuario("vivi", 1);
 
-    rs.amigar_usuarios(1,2);
-    rs.amigar_usuarios(1,3);
-    rs.amigar_usuarios(4,5);
+    // rs.amigar_usuarios(1,2);
+    // rs.amigar_usuarios(1,3);
+    // rs.amigar_usuarios(4,5);
 
     rs.eliminar_usuario(1);
 
@@ -183,15 +183,15 @@ TEST(RedSocial, amigar_usuarios_ver_amigos_popular) {
     rs.registrar_usuario("vir", 2);
     rs.registrar_usuario("vivi", 1);
 
-    rs.amigar_usuarios(1,2);
-    rs.amigar_usuarios(4,5);
-    rs.amigar_usuarios(4,3);
+    // rs.amigar_usuarios(1,2);
+    // rs.amigar_usuarios(4,5);
+    // rs.amigar_usuarios(4,3);
 
     set<string> u = {"agus", "tom"};
     EXPECT_EQ(u, rs.amigos_del_usuario_mas_popular());
 
-    rs.amigar_usuarios(1,3);
-    rs.amigar_usuarios(1,5);
+    // rs.amigar_usuarios(1,3);
+    // rs.amigar_usuarios(1,5);
 
     u = {"vir", "tom", "agus"};
     EXPECT_EQ(u, rs.amigos_del_usuario_mas_popular());
@@ -206,13 +206,13 @@ TEST(RedSocial, desamigar_usuarios_ver_amigos_popular_cambia) {
     rs.registrar_usuario("vir", 2);
     rs.registrar_usuario("vivi", 1);
 
-    rs.amigar_usuarios(1,2);
-    rs.amigar_usuarios(1,3);
-    rs.amigar_usuarios(4,5);
-    rs.amigar_usuarios(4,3);
-    rs.amigar_usuarios(1,5);
-    rs.desamigar_usuarios(5,1);
-    rs.desamigar_usuarios(3,1);
+    // rs.amigar_usuarios(1,2);
+    // rs.amigar_usuarios(1,3);
+    // rs.amigar_usuarios(4,5);
+    // rs.amigar_usuarios(4,3);
+    // rs.amigar_usuarios(1,5);
+    // rs.desamigar_usuarios(5,1);
+    // rs.desamigar_usuarios(3,1);
 
     set<string> u = {"agus", "tom"};
     EXPECT_EQ(u, rs.amigos_del_usuario_mas_popular());
@@ -227,13 +227,13 @@ TEST(RedSocial, desamigar_usuarios_ver_amigos_popular_no_cambia) {
     rs.registrar_usuario("vir", 2);
     rs.registrar_usuario("vivi", 1);
 
-    rs.amigar_usuarios(1,2);
-    rs.amigar_usuarios(1,3);
-    rs.amigar_usuarios(4,5);
-    rs.amigar_usuarios(4,3);
-    rs.amigar_usuarios(1,5);
-    rs.desamigar_usuarios(4,5);
-    rs.desamigar_usuarios(4,3);
+    // rs.amigar_usuarios(1,2);
+    // rs.amigar_usuarios(1,3);
+    // rs.amigar_usuarios(4,5);
+    // rs.amigar_usuarios(4,3);
+    // rs.amigar_usuarios(1,5);
+    // rs.desamigar_usuarios(4,5);
+    // rs.desamigar_usuarios(4,3);
 
     set<string> u = {"vir", "tom", "agus"};
     EXPECT_EQ(u, rs.amigos_del_usuario_mas_popular());
@@ -248,11 +248,11 @@ TEST(RedSocial, eliminar_usuario_ver_amigos_popular_cambia) {
     rs.registrar_usuario("vir", 2);
     rs.registrar_usuario("vivi", 1);
 
-    rs.amigar_usuarios(1,2);
-    rs.amigar_usuarios(1,3);
-    rs.amigar_usuarios(4,5);
-    rs.amigar_usuarios(4,3);
-    rs.amigar_usuarios(1,5);
+    // rs.amigar_usuarios(1,2);
+    // rs.amigar_usuarios(1,3);
+    // rs.amigar_usuarios(4,5);
+    // rs.amigar_usuarios(4,3);
+    // rs.amigar_usuarios(1,5);
     rs.eliminar_usuario(1);
 
     set<string> u = {"agus", "tom"};
@@ -268,11 +268,11 @@ TEST(RedSocial, eliminar_usuario_ver_amigos_popular_no_cambia) {
     rs.registrar_usuario("vir", 2);
     rs.registrar_usuario("vivi", 1);
 
-    rs.amigar_usuarios(1,2);
-    rs.amigar_usuarios(1,3);
-    rs.amigar_usuarios(4,5);
-    rs.amigar_usuarios(4,3);
-    rs.amigar_usuarios(1,5);
+    // rs.amigar_usuarios(1,2);
+    // rs.amigar_usuarios(1,3);
+    // rs.amigar_usuarios(4,5);
+    // rs.amigar_usuarios(4,3);
+    // rs.amigar_usuarios(1,5);
     rs.eliminar_usuario(4);
 
     set<string> u = {"vir", "tom", "agus"};
