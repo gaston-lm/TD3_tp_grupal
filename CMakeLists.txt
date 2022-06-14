@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(TP)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a")
 
 include(FetchContent)
 FetchContent_Declare(
@@ -14,12 +14,12 @@ FetchContent_MakeAvailable(googletest)
 include (CTest)
 
 add_executable(red_social red_social_main.cpp RedSocial.cpp)
-#add_executable(red_social_tests red_social_tests.cpp RedSocial.cpp)
+add_executable(red_social_tests red_social_tests.cpp RedSocial.cpp)
 
-#target_link_libraries(
-#  red_social_tests
-#  gtest_main
-#)
+target_link_libraries(
+  red_social_tests
+  gtest_main
+)
 
-#include(GoogleTest)
-#gtest_discover_tests(red_social_tests)
+include(GoogleTest)
+gtest_discover_tests(red_social_tests)

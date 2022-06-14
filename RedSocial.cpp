@@ -6,118 +6,106 @@ RedSocial::RedSocial(){
     _usuarios = map<int, Usuario>();
     _conjunto_ids = set<int>();
     _cantidad_amistades = 0;
-    _usuario_mas_popular = _usuarios.begin();
-    //_amigos_del_mas_popular = (*_usuario_mas_popular).second._conjunto_amigos;
+    _usuario_mas_popular;
 }
 
 const set<int> & RedSocial::usuarios() const{
-    /* completar */
     return _conjunto_ids;
 }
+
 string RedSocial::obtener_alias(int id) const{
-    /* completar */
-    auto it = _usuarios.find(id);
-    return (*it).second._alias;
+    return _usuarios.at(id)._alias; //O(logn)
 }
+
 const set<string> & RedSocial::obtener_amigos(int id) const{
-    /* completar */
-    auto it = _usuarios.find(id); // log n
-    return (*it).second._conjunto_amigos;
+    return _usuarios.at(id)._conjunto_amigos; //O(logn)
 }
+
 int RedSocial::cantidad_amistades() const{
-    /* completar */
     return _cantidad_amistades;
 }
 
 void RedSocial::registrar_usuario(string alias, int id){
-    /* completar */
     Usuario nuevo_usuario {id, alias, {}};
     _usuarios.insert({id, nuevo_usuario});
+    // hace falta este set?
+    _conjunto_ids.insert(id);
+    if(_usuarios.size() == 1) {
+        _usuario_mas_popular = _usuarios.begin();
+    }
 }
+
 void RedSocial::eliminar_usuario(int id){
-    /* completar */
-    set<string> aux = obtener_amigos(id);
-    auto it = aux.begin();
-    for(it; it != aux.end(); ++it) {
+    auto it = obtener_amigos(id).begin();
+    while(it != obtener_amigos(id).end()) {
         int id_amigo = obtener_id(*it);
+        ++it;
         desamigar_usuarios(id, id_amigo);
     }
-    /*
-    auto it_usuario = _usuarios.find(id);
-    if(it_usuario == _usuario_mas_popular) {
-        auto it = obtener_amigos(id).begin();
-        ++it;
-        int cant_mas_popular = obtener_amigos(id).size();
-        for(it; it != obtener_amigos(id).end(); ++it) {
-            int id_de_usuario = obtener_id((*it));
-            int cantidad_a_comparar = _usuarios.find(id_de_usuario);
-            if(cant_mas_popular < )
-        }
-    }
-    */
-    auto it_usuario = _usuarios.find(id);
-    _usuarios.erase(it_usuario);
+    // Lucas:
+    // auto it = _usuarios.at(id)._conjunto_amigos.begin();
+    // while( it != _usuarios.at(id)._conjunto_amigos.end()){
+    //     int id_amigo = obtener_id(*it);
+    //     desamigar_usuarios(id, id_amigo);
+    //     it =_usuarios.at(id)._conjunto_amigos.begin();
+    // }
+
+    _usuarios.erase(id);
+    _conjunto_ids.erase(id);
 }
 
 void RedSocial::amigar_usuarios(int id_A, int id_B){
-    /* completar */
-    auto a = obtener_amigos(id_A);
-    a.insert(obtener_alias(id_B));
-    auto itA = _usuarios.find(id_A); 
-    (*itA).second._conjunto_amigos = a;
-
-    auto b = obtener_amigos(id_B);
-    b.insert(obtener_alias(id_A));
-    auto itB = _usuarios.find(id_B); 
-    (*itB).second._conjunto_amigos = b;
-
+    _usuarios.at(id_A)._conjunto_amigos.insert(obtener_alias(id_B));
+    _usuarios.at(id_B)._conjunto_amigos.insert(obtener_alias(id_A));
     _cantidad_amistades++;
-    // chequeamos usuario más popular
-    int cantidad_amigos_A = obtener_amigos(id_A).size();
-    int cantidad_amigos_B = obtener_amigos(id_B).size();
-    int cantidad_amigos_mas_popular = (*_usuario_mas_popular).second._conjunto_amigos.size();
-    if(cantidad_amigos_A >= cantidad_amigos_B) {
-        if (cantidad_amigos_A > cantidad_amigos_mas_popular) {
-            _usuario_mas_popular = _usuarios.find(id_A);
-            //_amigos_del_mas_popular = obtener_amigos(id_A);
-        }
-    } else {
-        if (cantidad_amigos_B > cantidad_amigos_mas_popular) {
-            _usuario_mas_popular = _usuarios.find(id_B);
-            //_amigos_del_mas_popular = obtener_amigos(id_B);
-        }
-    }
-    
-}
-void RedSocial::desamigar_usuarios(int id_A, int id_B){
-    /* completar */
-    auto a = obtener_amigos(id_A);
-    a.erase(obtener_alias(id_B));
-    auto itA = _usuarios.find(id_A); 
-    (*itA).second._conjunto_amigos = a;
 
-    auto b = obtener_amigos(id_B);
-    b.erase(obtener_alias(id_A));
-    auto itB = _usuarios.find(id_B); 
-    (*itB).second._conjunto_amigos = b;
-    
+    // chequeamos usuario más popular
+    /* este if es al peso pq como arriba se hace _cantidad_amistades++ nunca es 0
+    if(_cantidad_amistades == 0) {
+        //_usuario_mas_popular = _usuarios.at(id_A); 
+        _usuario_mas_popular = _usuarios.find(id_A);
+    }
+
+    else { 
+        */
+        int cantidad_amigos_A = obtener_amigos(id_A).size();
+        int cantidad_amigos_B = obtener_amigos(id_B).size();
+        int cantidad_amigos_popular = (*_usuario_mas_popular).second._conjunto_amigos.size();
+
+        if(cantidad_amigos_A > cantidad_amigos_popular){
+            _usuario_mas_popular = _usuarios.find(id_A);
+        } else if(cantidad_amigos_B > cantidad_amigos_popular){
+            _usuario_mas_popular = _usuarios.find(id_B);
+        }
+    //}
+}
+
+void RedSocial::desamigar_usuarios(int id_A, int id_B){
+    _usuarios.at(id_A)._conjunto_amigos.erase(obtener_alias(id_B));
+    _usuarios.at(id_B)._conjunto_amigos.erase(obtener_alias(id_A));
     _cantidad_amistades--;
+
+    if(id_A == (*_usuario_mas_popular).first || id_B == (*_usuario_mas_popular).first) {
+        auto mas_popular = _usuarios.begin();
+        for(auto it = mas_popular++; it != _usuarios.end(); it++) {
+            if((*it).second._conjunto_amigos.size() > (*mas_popular).second._conjunto_amigos.size()){
+                mas_popular = it;
+            }
+        }
+
+        _usuario_mas_popular = mas_popular;
+    }
 }
 
 int RedSocial::obtener_id(string alias) const{
-    /* completar */
-    int res = 0;
     auto it = _usuarios.begin();
-    for(it; it != _usuarios.end(); ++it) {
-        string alias_de_it = (*it).second._alias;
-        if(alias == alias_de_it) {
-            res = (*it).second._id;
-            break;
-        }
+    while(alias != (*it).second._alias) {
+        ++it;
     }
-    return res;
+
+    return (*it).second._id;
 }
+
 const set<string> & RedSocial::amigos_del_usuario_mas_popular() const{
-    /* completar */
-    return *(new set<string>);
+    return (*_usuario_mas_popular).second._conjunto_amigos;
 }

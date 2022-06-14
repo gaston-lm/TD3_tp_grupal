@@ -24,10 +24,9 @@ int main(){
     rs.registrar_usuario("vivi", 1);
 
     rs.amigar_usuarios(1,2);
-    // rs.amigar_usuarios(1,3);
-    // rs.amigar_usuarios(4,5);
+    rs.amigar_usuarios(1,3);
+    rs.amigar_usuarios(4,5);
 
-    //rs.eliminar_usuario(1);
-
-    //imprimir_set(rs.obtener_amigos(2));
+    rs.eliminar_usuario(1);
+    imprimir_set(rs.obtener_amigos(5));
 }

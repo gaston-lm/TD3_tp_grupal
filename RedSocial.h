@@ -23,7 +23,6 @@ class RedSocial{
     const std::set<std::string> & amigos_del_usuario_mas_popular() const; // O(1)
 
   private:
-    /* completar */
     struct Usuario {
       int _id;
       std::string _alias;
@@ -33,7 +32,7 @@ class RedSocial{
     std::set<int> _conjunto_ids;
     int _cantidad_amistades;
     std::map<int, Usuario>::iterator _usuario_mas_popular;
-    //std::set<string> _amigos_del_mas_popular;
+    //Usuario _usuario_mas_popular;
 };
 
 #endif
