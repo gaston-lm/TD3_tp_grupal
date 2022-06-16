@@ -2,85 +2,69 @@
 
 using namespace std;
 
-RedSocial::RedSocial(){
+RedSocial::RedSocial(){ // O(1)
     _usuarios = map<int, Usuario>();
     _conjunto_ids = set<int>();
     _cantidad_amistades = 0;
     _usuario_mas_popular;
 }
 
-const set<int> & RedSocial::usuarios() const{
+const set<int> & RedSocial::usuarios() const{ // O(1)
     return _conjunto_ids;
 }
 
-string RedSocial::obtener_alias(int id) const{
-    return _usuarios.at(id)._alias; //O(logn)
+string RedSocial::obtener_alias(int id) const{ //O(logn)
+    return _usuarios.at(id)._alias; 
 }
 
-const set<string> & RedSocial::obtener_amigos(int id) const{
-    return _usuarios.at(id)._conjunto_amigos; //O(logn)
+const set<string> & RedSocial::obtener_amigos(int id) const{ //O(logn)
+    return _usuarios.at(id)._conjunto_amigos; 
 }
 
-int RedSocial::cantidad_amistades() const{
+int RedSocial::cantidad_amistades() const{ // O(1)
     return _cantidad_amistades;
 }
 
-void RedSocial::registrar_usuario(string alias, int id){
-    Usuario nuevo_usuario {id, alias, {}};
+void RedSocial::registrar_usuario(string alias, int id){ // O(log n)
+    Usuario nuevo_usuario {alias, {}};
     _usuarios.insert({id, nuevo_usuario});
-    // hace falta este set?
     _conjunto_ids.insert(id);
+
+    // si hay un único usuario, ese es el más popular
     if(_usuarios.size() == 1) {
         _usuario_mas_popular = _usuarios.begin();
     }
 }
 
-void RedSocial::eliminar_usuario(int id){
+void RedSocial::eliminar_usuario(int id){ // O(n) con n = cantidad de amigos de usuario a eliminar
     auto it = obtener_amigos(id).begin();
     while(it != obtener_amigos(id).end()) {
         int id_amigo = obtener_id(*it);
         ++it;
         desamigar_usuarios(id, id_amigo);
     }
-    // Lucas:
-    // auto it = _usuarios.at(id)._conjunto_amigos.begin();
-    // while( it != _usuarios.at(id)._conjunto_amigos.end()){
-    //     int id_amigo = obtener_id(*it);
-    //     desamigar_usuarios(id, id_amigo);
-    //     it =_usuarios.at(id)._conjunto_amigos.begin();
-    // }
 
     _usuarios.erase(id);
     _conjunto_ids.erase(id);
 }
 
-void RedSocial::amigar_usuarios(int id_A, int id_B){
+void RedSocial::amigar_usuarios(int id_A, int id_B){ // O(log n)
     _usuarios.at(id_A)._conjunto_amigos.insert(obtener_alias(id_B));
     _usuarios.at(id_B)._conjunto_amigos.insert(obtener_alias(id_A));
     _cantidad_amistades++;
 
-    // chequeamos usuario más popular
-    /* este if es al peso pq como arriba se hace _cantidad_amistades++ nunca es 0
-    if(_cantidad_amistades == 0) {
-        //_usuario_mas_popular = _usuarios.at(id_A); 
+    int cantidad_amigos_A = obtener_amigos(id_A).size();
+    int cantidad_amigos_B = obtener_amigos(id_B).size();
+    int cantidad_amigos_popular = (*_usuario_mas_popular).second._conjunto_amigos.size();
+
+    if(cantidad_amigos_A > cantidad_amigos_popular){
         _usuario_mas_popular = _usuarios.find(id_A);
+    } else if(cantidad_amigos_B > cantidad_amigos_popular){
+        _usuario_mas_popular = _usuarios.find(id_B);
     }
-
-    else { 
-        */
-        int cantidad_amigos_A = obtener_amigos(id_A).size();
-        int cantidad_amigos_B = obtener_amigos(id_B).size();
-        int cantidad_amigos_popular = (*_usuario_mas_popular).second._conjunto_amigos.size();
-
-        if(cantidad_amigos_A > cantidad_amigos_popular){
-            _usuario_mas_popular = _usuarios.find(id_A);
-        } else if(cantidad_amigos_B > cantidad_amigos_popular){
-            _usuario_mas_popular = _usuarios.find(id_B);
-        }
-    //}
 }
 
-void RedSocial::desamigar_usuarios(int id_A, int id_B){
+void RedSocial::desamigar_usuarios(int id_A, int id_B){  // O(n) con n = cantidad de usuarios
     _usuarios.at(id_A)._conjunto_amigos.erase(obtener_alias(id_B));
     _usuarios.at(id_B)._conjunto_amigos.erase(obtener_alias(id_A));
     _cantidad_amistades--;
@@ -97,15 +81,15 @@ void RedSocial::desamigar_usuarios(int id_A, int id_B){
     }
 }
 
-int RedSocial::obtener_id(string alias) const{
+int RedSocial::obtener_id(string alias) const{ // O(n) con n = cantidad de usuarios
     auto it = _usuarios.begin();
     while(alias != (*it).second._alias) {
         ++it;
     }
 
-    return (*it).second._id;
+    return (*it).first;
 }
 
-const set<string> & RedSocial::amigos_del_usuario_mas_popular() const{
+const set<string> & RedSocial::amigos_del_usuario_mas_popular() const{ // O(1)
     return (*_usuario_mas_popular).second._conjunto_amigos;
 }
